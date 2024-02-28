@@ -17,15 +17,15 @@ jobs:
         go-version: [1.22.x]
     
     runs-on: ${{ matrix.os }}
-    env:
-      MONGO_SERVER_URL: mongodb://localhost:27017
-      MONGO_PORT: 27017
+    # env:
+    #   MONGO_SERVER_URL: mongodb://localhost:27017
+    #   MONGO_PORT: 27017
       # If test are affected by mongo, then set matrix-os to [ubuntu-latest]
-    services:
-      mongo:
-        image: mongo:7
-        ports:
-          - 27017:27017
+    # services:
+    #   mongo:
+    #     image: mongo:7
+    #     ports:
+    #       - 27017:27017
     
     steps:
       - name: Set up Go
