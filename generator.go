@@ -20,8 +20,19 @@ import (
 
 var concurrent = runtime.NumCPU()
 
-// ApplyInterface specifies .diy_method interfaces on structures, implment codes will be generated after calling g.Execute()
-// eg: g.ApplyInterface(func(model.Method){}, model.User{}, model.Company{})
+// ApplyInterface applies the given models as interfaces to the generator.
+// It converts the models into structs using the generate.ConvertStructs function,
+// checks for any errors, and then applies the generated structs to the generator.
+// If there is an error during the conversion or application process, it logs the error
+// and panics with a "check struct fail" message.
+//
+// Example:
+//
+//	g := docstoregen.NewGenerator(docstoregen.Config{
+//		OutPath: "query",
+//	})
+//	g.ApplyInterface(&User{}, &Company{}) // Apply the User and Company models as interfaces to the generator.
+//	g.Execute()
 func (g *Generator) ApplyInterface(models ...interface{}) {
 	structs, err := generate.ConvertStructs(models...)
 	if err != nil {
@@ -115,6 +126,14 @@ type Generator struct {
 // It first generates the query file and then logs the progress.
 // If any error occurs during the generation process, it logs the error and panics.
 // Finally, it logs the completion of code generation.
+//
+// Example:
+//
+//	g := docstoregen.NewGenerator(docstoregen.Config{
+//		OutPath: "query",
+//	})
+//	g.ApplyInterface(&User{}, &Company{})
+//	g.Execute() // Generate the query code files.
 func (g *Generator) Execute() {
 	g.Logger.Info("Start generating code.")
 
