@@ -33,7 +33,7 @@ All contributions are welcome! Open a pull request to request a feature or submi
 
 ## License
 
-Released under the [MIT License](https://github.com/bartventer/docstore-gen/blob/master/License)
+Released under the [Apache License 2.0](LICENSE).
 
 ## Acknowledgements
 
