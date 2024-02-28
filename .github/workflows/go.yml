@@ -1,0 +1,75 @@
+
+name: Go
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+
+  build:
+    name: Build
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        go-version: [1.22.x]
+    
+    runs-on: ${{ matrix.os }}
+    env:
+      MONGO_SERVER_URL: mongodb://localhost:27017
+      MONGO_PORT: 27017
+      # If test are affected by mongo, then set matrix-os to [ubuntu-latest]
+    services:
+      mongo:
+        image: mongo:7
+        ports:
+          - 27017:27017
+    
+    steps:
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ matrix.go-version }}
+        id: go
+  
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@v4
+  
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+  
+      - name: Get dependencies
+        run: go mod download
+  
+      - name: Build
+        run: make build
+  
+      - name: Test and Coverage
+        run: make cover
+        
+      - uses: shogo82148/actions-goveralls@v1
+        with:
+          path-to-profile: ./tmp/cover.out
+  
+  semantic-release:
+    needs: [build]
+    runs-on: ubuntu-latest
+    permissions: 
+      contents: write
+      issues: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run semantic-release
+        if: github.repository == 'bartventer/docstore-gen' && github.event_name == 'push'
+        run: |
+          yarn global add semantic-release@17
+          semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
