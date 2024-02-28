@@ -9,6 +9,7 @@ Friendly & Safer [GO CDK Docstore](https://gocloud.dev/howto/docstore/) Query Ge
 [![Build](https://github.com/bartventer/docstore-gen/actions/workflows/go.yml/badge.svg)](https://github.com/bartventer/docstore-gen/actions/workflows/go.yml)
 ![GitHub issues](https://img.shields.io/github/issues/bartventer/docstore-gen)
 [![License](https://img.shields.io/github/license/bartventer/docstore-gen.svg)](LICENSE)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fbartventer%2Fdocstore-gen.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fbartventer%2Fdocstore-gen?ref=badge_shield)
 
 ## Overview
 
@@ -34,6 +35,9 @@ All contributions are welcome! Open a pull request to request a feature or submi
 ## License
 
 Released under the [Apache License 2.0](LICENSE).
+
+
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fbartventer%2Fdocstore-gen.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fbartventer%2Fdocstore-gen?ref=badge_large)
 
 ## Acknowledgements
 
