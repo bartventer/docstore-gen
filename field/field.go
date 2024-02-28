@@ -1,3 +1,4 @@
+// Package field provides a way to create field expressions for use with the docstore package.
 package field
 
 import (
