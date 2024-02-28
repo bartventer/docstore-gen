@@ -1,6 +1,6 @@
 # Docstore Query Gen
 
-Friendly & Safer [GO CDK Docstore](https://gocloud.dev/howto/docstore/) Query Generation, inspired by [go-gorm/gen](https://github.com/go-gorm/gen).
+Friendly & Safer [GO CDK Docstore](https://gocloud.dev/howto/docstore/), inspired by [go-gorm/gen](https://github.com/go-gorm/gen).
 
 [![Go Reference](https://pkg.go.dev/badge/github.com/bartventer/docstore-gen.svg)](https://pkg.go.dev/github.com/bartventer/docstore-gen)
 [![Release](https://img.shields.io/github/release/bartventer/docstore-gen.svg)](https://github.com/bartventer/docstore-gen/releases/latest)
