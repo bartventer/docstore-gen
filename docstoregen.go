@@ -15,15 +15,15 @@
 //	)
 //
 //	type User struct {
-//		ID   string `json:"id" docstore:"id"`
-//		Name string `json:"name" docstore:"name"`
+//		ID   string `docstore:"id"`
+//		Name string `docstore:"name"`
 //	}
 //
 //	func (User) TableName() string { return "user" }
 //
 //	type Copmany struct {
-//		ID   string `json:"id" docstore:"id"`
-//		Name string `json:"name" docstore:"name"`
+//		ID   string `docstore:"id"`
+//		Name string `docstore:"name"`
 //	}
 //
 //	func (Copmany) TableName() string { return "company" }
