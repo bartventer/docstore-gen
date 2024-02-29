@@ -103,6 +103,22 @@ func TestConfig_Revise(t *testing.T) {
 	}
 }
 
+// newQueryStructMeta returns a new instance of generate.QueryStructMeta.
+// It initializes the struct with default values.
+func newQueryStructMeta() *generate.QueryStructMeta {
+	return &generate.QueryStructMeta{
+		Generated:       false,
+		FileName:        "",
+		S:               "t",
+		QueryStructName: "TestQuery",
+		ModelStructName: "TestModel",
+		TableName:       "test_table",
+		StructInfo:      parser.Param{PkgPath: "test_pkg", Package: "test_pkg", Name: "", Type: "", IsArray: false, IsPointer: false},
+		Source:          0,
+		ImportPkgPaths:  []string{"fmt", "os"},
+	}
+}
+
 func TestGenerator_generateQueryFile(t *testing.T) {
 	tests := []struct {
 		name    string
@@ -122,17 +138,7 @@ func TestGenerator_generateQueryFile(t *testing.T) {
 			t.Cleanup(cleanup)
 			g.Data = map[string]*genInfo{
 				"test": {
-					QueryStructMeta: &generate.QueryStructMeta{
-						Generated:       false,
-						FileName:        "",
-						S:               "t",
-						QueryStructName: "TestQuery",
-						ModelStructName: "TestModel",
-						TableName:       "test_table",
-						StructInfo:      parser.Param{PkgPath: "", Package: "", Name: "", Type: "", IsArray: false, IsPointer: false},
-						Source:          0,
-						ImportPkgPaths:  []string{"fmt", "os"},
-					},
+					QueryStructMeta: newQueryStructMeta(),
 				},
 			}
 			if err := g.generateQueryFile(); (err != nil) != tt.wantErr {
@@ -207,17 +213,7 @@ func TestGenerator_generateSingleQueryFile(t *testing.T) {
 		{
 			name: "Valid data",
 			args: args{data: &genInfo{
-				QueryStructMeta: &generate.QueryStructMeta{
-					Generated:       false,
-					FileName:        "",
-					S:               "",
-					QueryStructName: "TestQuery",
-					ModelStructName: "",
-					TableName:       "test_table",
-					StructInfo:      parser.Param{PkgPath: "", Package: "", Name: "", Type: "", IsArray: false, IsPointer: false},
-					Source:          0,
-					ImportPkgPaths:  []string{"fmt", "os"},
-				},
+				QueryStructMeta: newQueryStructMeta(),
 			}},
 			wantErr: false,
 		},
