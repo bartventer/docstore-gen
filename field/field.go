@@ -20,7 +20,8 @@ func (e expr) AddFieldPath(path docstore.FieldPath) expr {
 	return e
 }
 
-// Build implements Expr.
+// Build returns the field path, operator, and value for the expression.
+// If the expression is nil, it returns zero values for all three return types.
 func (e expr) Build() (fieldPath docstore.FieldPath, op string, value interface{}) {
 	if e.e == nil {
 		return
@@ -28,7 +29,7 @@ func (e expr) Build() (fieldPath docstore.FieldPath, op string, value interface{
 	return e.e.Build()
 }
 
-// ColumnName implements Expr.
+// ColumnName returns the column name (same as the docstore tag name)
 func (e expr) ColumnName() string {
 	return e.col.Name
 }
