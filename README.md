@@ -1,4 +1,4 @@
-# Docstore Query Gen
+# Docstore Gen
 
 Friendly & Safer [GO CDK Docstore](https://gocloud.dev/howto/docstore/), inspired by [go-gorm/gen](https://github.com/go-gorm/gen).
 
@@ -21,7 +21,7 @@ Friendly & Safer [GO CDK Docstore](https://gocloud.dev/howto/docstore/), inspire
 
 ## Getting Started
 
-* Docstore Query Gen Guides; see [examples](https://github.com/bartventer/docstore-gen/blob/master/examples/README.md)
+* Docstore Gen Guides; see [examples](https://github.com/bartventer/docstore-gen/blob/master/examples/README.md)
 * Docstore Guides [https://gocloud.dev/howto/docstore/](https://gocloud.dev/howto/docstore/)
 
 ## Maintainers
