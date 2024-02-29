@@ -2,7 +2,7 @@ package main
 
 import (
 	docstoregen "github.com/bartventer/docstore-gen"
-	"github.com/bartventer/docstore-gen/examples/cmd/models"
+	"github.com/bartventer/docstore-gen/examples/models"
 )
 
 func main() {

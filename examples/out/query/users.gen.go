@@ -4,7 +4,13 @@
 
 package query
 
-import "github.com/bartventer/docstore-gen/field"
+import (
+	"context"
+
+	"github.com/bartventer/docstore-gen/examples/models"
+	"github.com/bartventer/docstore-gen/field"
+	"gocloud.dev/docstore"
+)
 
 // newUser create new User query struct
 func newUser() user {
@@ -24,6 +30,8 @@ func newUser() user {
 }
 
 type user struct {
+	userCollectionDo
+
 	ID          field.String
 	Name        field.String
 	Age         field.Uint
@@ -34,6 +42,162 @@ type user struct {
 }
 
 // TableName get table name
-func (q user) TableName() string {
+func (u user) TableName() string {
 	return "users"
+}
+
+// WithCollection use new collection.
+// This method is used to set the collection for the query struct and
+// is typically used right after initializing the query struct.
+func (u *user) WithCollection(coll *docstore.Collection) *user {
+	u.userCollectionDo = userCollectionDo{coll}
+	return u
+}
+
+type (
+	// userCollectionDo collection data object.
+	// Embeds the [docstore.Collection] type.
+	userCollectionDo struct{ *docstore.Collection }
+
+	// userActionListDo action list data object.
+	// Embeds the [docstore.ActionList] type.
+	userActionListDo struct{ *docstore.ActionList }
+
+	// userQueryDo query data object.
+	// Embeds the [docstore.Query] type.
+	userQueryDo struct{ *docstore.Query }
+
+	// userDocumentIteratorDo document iterator data object.
+	// Embeds the [docstore.DocumentIterator] type.
+	userDocumentIteratorDo struct{ *docstore.DocumentIterator }
+)
+
+// ================================= CollectionDO =============================
+
+// Actions get action list
+func (u *userCollectionDo) Actions() *userActionListDo {
+	return &userActionListDo{u.Collection.Actions()}
+}
+
+// Query get query
+func (u *userCollectionDo) Query() *userQueryDo {
+	return &userQueryDo{u.Collection.Query()}
+}
+
+// Create create new User
+func (u *userCollectionDo) Create(ctx context.Context, doc *models.User) error {
+	return u.Collection.Create(ctx, doc)
+}
+
+// Delete delete User
+func (u *userCollectionDo) Delete(ctx context.Context, doc *models.User) error {
+	return u.Collection.Delete(ctx, doc)
+}
+
+// Get get User
+func (u *userCollectionDo) Get(ctx context.Context, doc *models.User, fps ...docstore.FieldPath) error {
+	return u.Collection.Get(ctx, doc, fps...)
+}
+
+// Put put User
+func (u *userCollectionDo) Put(ctx context.Context, doc *models.User) error {
+	return u.Collection.Put(ctx, doc)
+}
+
+// Replace replace User
+func (u *userCollectionDo) Replace(ctx context.Context, doc *models.User) error {
+	return u.Collection.Replace(ctx, doc)
+}
+
+// Update update User
+func (u *userCollectionDo) Update(ctx context.Context, doc *models.User, mods docstore.Mods) error {
+	return u.Collection.Update(ctx, doc, mods)
+}
+
+// ================================= ActionListDO =============================
+
+// Create create new User
+func (u *userActionListDo) Create(doc *models.User) *userActionListDo {
+	u.ActionList = u.ActionList.Create(doc)
+	return u
+}
+
+// Delete delete User
+func (u *userActionListDo) Delete(doc *models.User) *userActionListDo {
+	u.ActionList = u.ActionList.Delete(doc)
+	return u
+}
+
+// Get get User
+func (u *userActionListDo) Get(doc *models.User, fps ...docstore.FieldPath) *userActionListDo {
+	u.ActionList = u.ActionList.Get(doc, fps...)
+	return u
+}
+
+// Put put User
+func (u *userActionListDo) Put(doc *models.User) *userActionListDo {
+	u.ActionList = u.ActionList.Put(doc)
+	return u
+}
+
+// Replace replace User
+func (u *userActionListDo) Replace(doc *models.User) *userActionListDo {
+	u.ActionList = u.ActionList.Replace(doc)
+	return u
+}
+
+// Update update User
+func (u *userActionListDo) Update(doc *models.User, mods docstore.Mods) *userActionListDo {
+	u.ActionList = u.ActionList.Update(doc, mods)
+	return u
+}
+
+// BeforeDo before do
+func (u *userActionListDo) BeforeDo(f func(asFunc func(interface{}) bool) error) *userActionListDo {
+	u.ActionList = u.ActionList.BeforeDo(f)
+	return u
+}
+
+// =================================== QueryDO ================================
+
+// Get get User
+func (u *userQueryDo) Get(ctx context.Context, fps ...docstore.FieldPath) *userDocumentIteratorDo {
+	return &userDocumentIteratorDo{u.Query.Get(ctx, fps...)}
+}
+
+// BeforeQuery before query
+func (u *userQueryDo) BeforeQuery(f func(asFunc func(interface{}) bool) error) *userQueryDo {
+	u.Query = u.Query.BeforeQuery(f)
+	return u
+}
+
+// Limit limit
+func (u *userQueryDo) Limit(n int) *userQueryDo {
+	u.Query = u.Query.Limit(n)
+	return u
+}
+
+// OrderBy order by
+func (u *userQueryDo) OrderBy(orderBys ...field.OrderByExpression) *userQueryDo {
+	for _, orderBy := range orderBys {
+		field, direction := orderBy.BuildOrderBy()
+		u.Query = u.Query.OrderBy(field, direction)
+	}
+	return u
+}
+
+// Where where
+func (u *userQueryDo) Where(conds ...field.Expr) *userQueryDo {
+	for _, cond := range conds {
+		fieldPath, op, value := cond.Build()
+		u.Query = u.Query.Where(fieldPath, op, value)
+	}
+	return u
+}
+
+// ============================== DocumentIteratorDO ==========================
+
+// Next next
+func (u *userDocumentIteratorDo) Next(ctx context.Context, doc *models.User) error {
+	return u.DocumentIterator.Next(ctx, doc)
 }
