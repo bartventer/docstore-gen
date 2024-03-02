@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"fmt"
-	"io"
 	"time"
 
 	"github.com/bartventer/docstore-gen/examples/models"
@@ -19,6 +18,7 @@ func main() {
 
 	// initialize docstore query
 	query.Initialize()
+
 	// use q data object
 	q := query.User
 
@@ -37,32 +37,27 @@ func main() {
 		Name:        "John Doe",
 		Age:         30,
 		DateJoiend:  time.Now(),
-		IsAdmin:     false,
-		Preferences: []byte(`{"theme": "dark"}`),
-		Expenditure: 100.50,
+		IsAdmin:     true,
+		Expenditure: 100.00,
 	}
 	if err := q.WithCollection(coll).Create(ctx, &user); err != nil {
 		panic(err)
 	}
-	fmt.Printf("created user: %+v\n", user)
+	fmt.Printf("[created user] via `Create` method:\n\t=>%+v\n", user)
 
-	// Find the user
-	var res []models.User
-	iter := q.WithCollection(coll).Query().Where(q.ID.Eq("1")).Get(ctx)
-	defer iter.Stop()
-	for {
-		var u models.User
-		err := iter.Next(ctx, &u)
-		if err == io.EOF {
-			break
-		} else if err != nil {
-			panic(err)
-		} else {
-			res = append(res, u)
-		}
+	// Set the user's preferences theme to "light", increment the expenditure by 20.50, and unset is_admin
+	user2 := models.User{ID: user.ID}
+	if err := q.WithCollection(coll).Actions().Update(&user,
+		q.Preferences.Set([]byte(`{"theme": "light"}`)),
+		q.Expenditure.Inc(20.50),
+		q.IsAdmin.Unset(),
+	).Get(&user2).Do(ctx); err != nil {
+		panic(err)
 	}
-	if len(res) == 0 {
-		panic("user not found")
-	}
-	fmt.Printf("found user: %+v\n", res[0])
+	fmt.Printf("[updated user] changes via `Update` method:\n\t=>%+v\n", map[string]interface{}{
+		"preferences": string(user2.Preferences),
+		"expenditure": user2.Expenditure,
+		"is_admin":    user2.IsAdmin,
+	})
+
 }

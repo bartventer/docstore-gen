@@ -110,8 +110,8 @@ func (u *userCollectionDo) Replace(ctx context.Context, doc *models.User) error 
 }
 
 // Update update User
-func (u *userCollectionDo) Update(ctx context.Context, doc *models.User, mods docstore.Mods) error {
-	return u.Collection.Update(ctx, doc, mods)
+func (u *userCollectionDo) Update(ctx context.Context, doc *models.User, mods ...field.Mod) error {
+	return u.Collection.Update(ctx, doc, field.ConvertMods(mods))
 }
 
 // ================================= ActionListDO =============================
@@ -147,8 +147,8 @@ func (u *userActionListDo) Replace(doc *models.User) *userActionListDo {
 }
 
 // Update update User
-func (u *userActionListDo) Update(doc *models.User, mods docstore.Mods) *userActionListDo {
-	u.ActionList = u.ActionList.Update(doc, mods)
+func (u *userActionListDo) Update(doc *models.User, mods ...field.Mod) *userActionListDo {
+	u.ActionList = u.ActionList.Update(doc, field.ConvertMods(mods))
 	return u
 }
 

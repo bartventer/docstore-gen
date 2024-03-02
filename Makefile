@@ -7,9 +7,6 @@ GOLINT := golint
 GOVET := go vet
 GOTEST := go test
 GOCOVER := go tool cover
-TEMP_DIR := ./tmp
-COVERAGE_PROFILE := cover.out
-BINARY := $(TEMP_DIR)/$(PKG_NAME)
 
 # Flags
 GOFLAGS := -v
@@ -18,6 +15,14 @@ GOLINTFLAGS := -set_exit_status
 GOVETFLAGS := -all
 GOTESTFLAGS := -v
 GOCOVERFLAGS := -html
+
+# Directories and Files
+TEMP_DIR := ./tmp
+COVERAGE_PROFILE := cover.out
+BINARY := $(TEMP_DIR)/$(PKG_NAME)
+EXAMPLE_DIR := ./examples
+EXAMPLE_SCRIPT := $(EXAMPLE_DIR)/generate.sh
+EXAMPLE_MAIN := $(EXAMPLE_DIR)/main.go
 
 .PHONY: all
 all: build test
@@ -36,7 +41,7 @@ vet:
 
 .PHONY: clean
 clean:
-	rm -rf $(TEMP_DIR)
+	rm -f $(TEMP_DIR)/*
 
 .PHONY: build
 build: vet
@@ -52,6 +57,18 @@ cover:
 	$(GOTEST) $(GOTESTFLAGS) -coverprofile=$(COVERAGE_PROFILE) -outputdir=$(TEMP_DIR) `go list ./... | grep -v ./internal | grep -v ./examples`
 	$(GOCOVER) $(GOCOVERFLAGS) $(TEMP_DIR)/$(COVERAGE_PROFILE)
 
+.PHONY: generate-example
+generate-example:
+	@if [ -x $(EXAMPLE_SCRIPT) ]; then \
+		$(EXAMPLE_SCRIPT); \
+	else \
+		echo "$(EXAMPLE_SCRIPT) does not exist or is not executable"; \
+		exit 1; \
+	fi
+
+.PHONY: run-example
+run-example:
+	$(GO) run $(EXAMPLE_MAIN)
 
 .PHONY: help
 help:
@@ -65,4 +82,6 @@ help:
 	@echo "  build   - build binary"
 	@echo "  test    - run tests"
 	@echo "  cover   - run tests with coverage"
+	@echo "  generate-example - generate example"
+	@echo "  run-example - run example"
 	@echo "  help    - show this help message"
