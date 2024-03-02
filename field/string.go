@@ -40,6 +40,13 @@ func (field String) NotIn(values ...string) Expr {
 	return expr{e: NotIn{Column: field.col, Values: field.toSlice(values)}}
 }
 
+var _ simpleModifier[string] = new(String)
+
+// Set set value
+func (field String) Set(value string) Mod {
+	return mod{m: Set{Column: field.col, Value: value}}
+}
+
 // toStringSlice converts a slice of string to a slice of interface{}
 func (field String) toSlice(values []string) []interface{} {
 	slice := make([]interface{}, len(values))
@@ -87,6 +94,13 @@ func (field Bytes) In(values ...[]byte) Expr {
 // NotIn checks if the field is not in the provided bytes values
 func (field Bytes) NotIn(values ...[]byte) Expr {
 	return expr{e: NotIn{Column: field.col, Values: field.toSlice(values)}}
+}
+
+var _ simpleModifier[[]byte] = new(Bytes)
+
+// Set set value
+func (field Bytes) Set(value []byte) Mod {
+	return mod{m: Set{Column: field.col, Value: value}}
 }
 
 // toSlice converts a slice of bytes to a slice of interface{}

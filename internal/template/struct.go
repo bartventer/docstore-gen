@@ -109,8 +109,8 @@ const (
 	}
 
 	// Update update {{.ModelStructName}}
-	func ({{.S}} *{{.QueryStructName}}CollectionDo) Update(ctx context.Context, doc *{{$structPackageType}}, mods docstore.Mods) error {
-		return {{.S}}.Collection.Update(ctx, doc, mods)
+	func ({{.S}} *{{.QueryStructName}}CollectionDo) Update(ctx context.Context, doc *{{$structPackageType}}, mods ...field.Mod) error {
+		return {{.S}}.Collection.Update(ctx, doc, field.ConvertMods(mods))
 	}
 	`
 
@@ -149,8 +149,8 @@ const (
 	}
 
 	// Update update {{.ModelStructName}}
-	func ({{.S}} *{{.QueryStructName}}ActionListDo) Update(doc *{{$structPackageType}}, mods docstore.Mods) *{{.QueryStructName}}ActionListDo {
-		{{.S}}.ActionList = {{.S}}.ActionList.Update(doc, mods)
+	func ({{.S}} *{{.QueryStructName}}ActionListDo) Update(doc *{{$structPackageType}}, mods ...field.Mod) *{{.QueryStructName}}ActionListDo {
+		{{.S}}.ActionList = {{.S}}.ActionList.Update(doc, field.ConvertMods(mods))
 		return {{.S}}
 	}
 

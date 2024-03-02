@@ -42,6 +42,13 @@ func (field Time) NotIn(values ...time.Time) Expr {
 	return expr{e: NotIn{Column: field.col, Values: field.toSlice(values)}}
 }
 
+var _ simpleModifier[time.Time] = new(Time)
+
+// Set set value
+func (field Time) Set(value time.Time) Mod {
+	return mod{m: Set{Column: field.col, Value: value}}
+}
+
 // toSlice converts a slice of time.Time to a slice of interface{}
 func (field Time) toSlice(values []time.Time) []interface{} {
 	slice := make([]interface{}, len(values))

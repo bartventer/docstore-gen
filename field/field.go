@@ -7,14 +7,26 @@ import (
 	"gocloud.dev/docstore"
 )
 
+// ================================ expr ================================
+
 var _ Expr = new(expr)
+var _ Mod = new(expr)
+var _ coreModifier = new(expr)
 
 type expr struct {
 	col Column
 	e   Expression
+	m   Mod
 }
 
-// AddFieldPath implements Expr.
+// AddFieldPath adds a field path to the column.
+//
+// Example:
+//
+//		field := field.Field{Column: field.Column{Name: "name"}}
+//	 // "name"
+//		field = field.AddFieldPath("user")
+//	 // "user.name"
 func (e expr) AddFieldPath(path docstore.FieldPath) expr {
 	e.col.path = append(e.col.path, string(path))
 	return e
@@ -34,10 +46,29 @@ func (e expr) ColumnName() string {
 	return e.col.Name
 }
 
-// FieldPath implements Expr.
+// FieldPath returns the [docstore.FieldPath] for the column.
+//
+// [docstore.FieldPath]: https://pkg.go.dev/gocloud.dev/docstore#FieldPath
 func (e expr) FieldPath() docstore.FieldPath {
 	return docstore.FieldPath(strings.Join(e.col.path, "."))
 }
+
+// BuildMod returns the [docstore.FieldPath] and value for the modifier.
+//
+// [docstore.FieldPath]: https://pkg.go.dev/gocloud.dev/docstore#FieldPath
+func (e expr) BuildMod() (fieldPath docstore.FieldPath, value interface{}) {
+	if e.m == nil {
+		return
+	}
+	return e.m.BuildMod()
+}
+
+// Unset returns a modifier to unset (delete) the value from the document.
+func (e expr) Unset() Mod {
+	return mod{m: Unset{Column: e.col}}
+}
+
+// ================================ exprOrderable ================================
 
 // exprOrderable represents a field that can be ordered
 type exprOrderable struct {
@@ -57,13 +88,34 @@ func (e exprOrderable) Desc() OrderByExpression {
 	return exprOrderable{o: Desc{Column: e.col}}
 }
 
-// BuildOrderBy implements OrderableExpr.
+// BuildOrderBy returns the field and direction for the order by expression
 func (e exprOrderable) BuildOrderBy() (field string, direction string) {
 	if e.o == nil {
 		return
 	}
 	return e.o.BuildOrderBy()
 }
+
+// ================================ mod ================================
+
+// mod represents a modifier struct
+type mod struct {
+	m Mod
+}
+
+var _ Mod = new(mod)
+
+// BuildMod returns the [docstore.FieldPath] and value for the modifier.
+//
+// [docstore.FieldPath]: https://pkg.go.dev/gocloud.dev/docstore#FieldPath
+func (m mod) BuildMod() (fieldPath docstore.FieldPath, value interface{}) {
+	if m.m == nil {
+		return
+	}
+	return m.m.BuildMod()
+}
+
+// ================================ Field ================================
 
 // Field represents a standard field struct
 type Field struct{ exprOrderable }
@@ -103,6 +155,13 @@ func (field Field) In(values ...interface{}) Expr {
 // NotIn checks if the field is not in the provided values
 func (field Field) NotIn(values ...interface{}) Expr {
 	return expr{e: NotIn{Column: field.col, Values: field.toSlice(values...)}}
+}
+
+var _ simpleModifier[interface{}] = new(Field)
+
+// Set set value
+func (field Field) Set(value interface{}) Mod {
+	return mod{m: Set{Column: field.col, Value: value}}
 }
 
 // toSlice converts a variadic interface{} argument to a slice of interface{}

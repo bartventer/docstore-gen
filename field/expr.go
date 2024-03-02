@@ -12,8 +12,7 @@ type Expression interface {
 
 // Expr a query expression about field
 type Expr interface {
-	ColumnName() string
-	FieldPath() docstore.FieldPath
+	Columner
 	Expression
 }
 

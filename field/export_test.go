@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"gocloud.dev/docstore"
+	"gocloud.dev/docstore/driver"
 )
 
 func TestExpr_Build(t *testing.T) {
@@ -848,6 +849,327 @@ func TestExpr_Build(t *testing.T) {
 			}
 			if tt.wantOp != gotOp {
 				t.Errorf("Op: want %v, got %v", tt.wantOp, gotOp)
+			}
+			if !reflect.DeepEqual(tt.wantValue, gotValue) {
+				t.Errorf("Value: want %v, got %v", tt.wantValue, gotValue)
+			}
+		})
+	}
+}
+
+func TestModifier_Build(t *testing.T) {
+	var (
+		table    = "table"
+		column   = "column"
+		testTime = time.Now()
+	)
+	tests := []struct {
+		name          string
+		expr          Mod
+		wantFieldPath docstore.FieldPath
+		wantValue     interface{}
+	}{
+		// ======================== generic ===================================
+		{
+			name:          "Field-Set",
+			expr:          NewField(table, column).Set("abc"),
+			wantFieldPath: docstore.FieldPath(column),
+			wantValue:     "abc",
+		},
+		{
+			name:          "Field-Unset",
+			expr:          NewField(table, column).Unset(),
+			wantFieldPath: docstore.FieldPath(column),
+			wantValue:     nil,
+		},
+		// ======================== string ====================================
+		{
+			name:          "String-Set",
+			expr:          NewString(table, column).Set("abc"),
+			wantFieldPath: docstore.FieldPath(column),
+			wantValue:     "abc",
+		},
+		{
+			name:          "String-Unset",
+			expr:          NewString(table, column).Unset(),
+			wantFieldPath: docstore.FieldPath(column),
+			wantValue:     nil,
+		},
+		// ======================== bytes =====================================
+		{
+			name:          "Bytes-Set",
+			expr:          NewBytes(table, column).Set([]byte{1, 2, 3}),
+			wantFieldPath: docstore.FieldPath(column),
+			wantValue:     []byte{1, 2, 3},
+		},
+		{
+			name:          "Bytes-Unset",
+			expr:          NewBytes(table, column).Unset(),
+			wantFieldPath: docstore.FieldPath(column),
+			wantValue:     nil,
+		},
+		// ======================== int =======================================
+		{
+			name:          "Int-Set",
+			expr:          NewInt(table, column).Set(123),
+			wantFieldPath: docstore.FieldPath(column),
+			wantValue:     123,
+		},
+		{
+			name:          "Int-Unset",
+			expr:          NewInt(table, column).Unset(),
+			wantFieldPath: docstore.FieldPath(column),
+			wantValue:     nil,
+		},
+		{
+			name:          "Int-Inc",
+			expr:          NewInt(table, column).Inc(1),
+			wantFieldPath: docstore.FieldPath(column),
+			wantValue:     driver.IncOp{Amount: 1},
+		},
+		{
+			name:          "Int8-Set",
+			expr:          NewInt8(table, column).Set(123),
+			wantFieldPath: docstore.FieldPath(column),
+			wantValue:     int8(123),
+		},
+		{
+			name:          "Int8-Unset",
+			expr:          NewInt8(table, column).Unset(),
+			wantFieldPath: docstore.FieldPath(column),
+			wantValue:     nil,
+		},
+		{
+			name:          "Int8-Inc",
+			expr:          NewInt8(table, column).Inc(1),
+			wantFieldPath: docstore.FieldPath(column),
+			wantValue:     driver.IncOp{Amount: int8(1)},
+		},
+		// ======================== int16 =====================================
+		{
+			name:          "Int16-Set",
+			expr:          NewInt16(table, column).Set(123),
+			wantFieldPath: docstore.FieldPath(column),
+			wantValue:     int16(123),
+		},
+		{
+			name:          "Int16-Unset",
+			expr:          NewInt16(table, column).Unset(),
+			wantFieldPath: docstore.FieldPath(column),
+			wantValue:     nil,
+		},
+		{
+			name:          "Int16-Inc",
+			expr:          NewInt16(table, column).Inc(1),
+			wantFieldPath: docstore.FieldPath(column),
+			wantValue:     driver.IncOp{Amount: int16(1)},
+		},
+		// ======================== int32 =====================================
+		{
+			name:          "Int32-Set",
+			expr:          NewInt32(table, column).Set(123),
+			wantFieldPath: docstore.FieldPath(column),
+			wantValue:     int32(123),
+		},
+		{
+			name:          "Int32-Unset",
+			expr:          NewInt32(table, column).Unset(),
+			wantFieldPath: docstore.FieldPath(column),
+			wantValue:     nil,
+		},
+		{
+			name:          "Int32-Inc",
+			expr:          NewInt32(table, column).Inc(1),
+			wantFieldPath: docstore.FieldPath(column),
+			wantValue:     driver.IncOp{Amount: int32(1)},
+		},
+		// ======================== int64 =====================================
+		{
+			name:          "Int64-Set",
+			expr:          NewInt64(table, column).Set(123),
+			wantFieldPath: docstore.FieldPath(column),
+			wantValue:     int64(123),
+		},
+		{
+			name:          "Int64-Unset",
+			expr:          NewInt64(table, column).Unset(),
+			wantFieldPath: docstore.FieldPath(column),
+			wantValue:     nil,
+		},
+		{
+			name:          "Int64-Inc",
+			expr:          NewInt64(table, column).Inc(1),
+			wantFieldPath: docstore.FieldPath(column),
+			wantValue:     driver.IncOp{Amount: int64(1)},
+		},
+		// ======================== uint ======================================
+		{
+			name:          "Uint-Set",
+			expr:          NewUint(table, column).Set(123),
+			wantFieldPath: docstore.FieldPath(column),
+			wantValue:     uint(123),
+		},
+		{
+			name:          "Uint-Unset",
+			expr:          NewUint(table, column).Unset(),
+			wantFieldPath: docstore.FieldPath(column),
+			wantValue:     nil,
+		},
+		{
+			name:          "Uint-Inc",
+			expr:          NewUint(table, column).Inc(1),
+			wantFieldPath: docstore.FieldPath(column),
+			wantValue:     driver.IncOp{Amount: uint(1)},
+		},
+		// ======================== uint8 =====================================
+		{
+			name:          "Uint8-Set",
+			expr:          NewUint8(table, column).Set(123),
+			wantFieldPath: docstore.FieldPath(column),
+			wantValue:     uint8(123),
+		},
+		{
+			name:          "Uint8-Unset",
+			expr:          NewUint8(table, column).Unset(),
+			wantFieldPath: docstore.FieldPath(column),
+			wantValue:     nil,
+		},
+		{
+			name:          "Uint8-Inc",
+			expr:          NewUint8(table, column).Inc(1),
+			wantFieldPath: docstore.FieldPath(column),
+			wantValue:     driver.IncOp{Amount: uint8(1)},
+		},
+		// ======================== uint16 ====================================
+		{
+			name:          "Uint16-Set",
+			expr:          NewUint16(table, column).Set(123),
+			wantFieldPath: docstore.FieldPath(column),
+			wantValue:     uint16(123),
+		},
+		{
+			name:          "Uint16-Unset",
+			expr:          NewUint16(table, column).Unset(),
+			wantFieldPath: docstore.FieldPath(column),
+			wantValue:     nil,
+		},
+		{
+			name:          "Uint16-Inc",
+			expr:          NewUint16(table, column).Inc(1),
+			wantFieldPath: docstore.FieldPath(column),
+			wantValue:     driver.IncOp{Amount: uint16(1)},
+		},
+		// ======================== uint32 ====================================
+		{
+			name:          "Uint32-Set",
+			expr:          NewUint32(table, column).Set(123),
+			wantFieldPath: docstore.FieldPath(column),
+			wantValue:     uint32(123),
+		},
+		{
+			name:          "Uint32-Unset",
+			expr:          NewUint32(table, column).Unset(),
+			wantFieldPath: docstore.FieldPath(column),
+			wantValue:     nil,
+		},
+		{
+			name:          "Uint32-Inc",
+			expr:          NewUint32(table, column).Inc(1),
+			wantFieldPath: docstore.FieldPath(column),
+			wantValue:     driver.IncOp{Amount: uint32(1)},
+		},
+		// ======================== uint64 ====================================
+		{
+			name:          "Uint64-Set",
+			expr:          NewUint64(table, column).Set(123),
+			wantFieldPath: docstore.FieldPath(column),
+			wantValue:     uint64(123),
+		},
+		{
+			name:          "Uint64-Unset",
+			expr:          NewUint64(table, column).Unset(),
+			wantFieldPath: docstore.FieldPath(column),
+			wantValue:     nil,
+		},
+		{
+			name:          "Uint64-Inc",
+			expr:          NewUint64(table, column).Inc(1),
+			wantFieldPath: docstore.FieldPath(column),
+			wantValue:     driver.IncOp{Amount: uint64(1)},
+		},
+		// ======================== float32 ===================================
+		{
+			name:          "Float32-Set",
+			expr:          NewFloat32(table, column).Set(123.45),
+			wantFieldPath: docstore.FieldPath(column),
+			wantValue:     float32(123.45),
+		},
+		{
+			name:          "Float32-Unset",
+			expr:          NewFloat32(table, column).Unset(),
+			wantFieldPath: docstore.FieldPath(column),
+			wantValue:     nil,
+		},
+		{
+			name:          "Float32-Inc",
+			expr:          NewFloat32(table, column).Inc(1.0),
+			wantFieldPath: docstore.FieldPath(column),
+			wantValue:     driver.IncOp{Amount: float32(1.0)},
+		},
+		// ======================== float64 ===================================
+		{
+			name:          "Float64-Set",
+			expr:          NewFloat64(table, column).Set(123.45),
+			wantFieldPath: docstore.FieldPath(column),
+			wantValue:     float64(123.45),
+		},
+		{
+			name:          "Float64-Unset",
+			expr:          NewFloat64(table, column).Unset(),
+			wantFieldPath: docstore.FieldPath(column),
+			wantValue:     nil,
+		},
+		{
+			name:          "Float64-Inc",
+			expr:          NewFloat64(table, column).Inc(1.0),
+			wantFieldPath: docstore.FieldPath(column),
+			wantValue:     driver.IncOp{Amount: float64(1.0)},
+		},
+
+		// ======================== bool ======================================
+		{
+			name:          "Bool-Set",
+			expr:          NewBool(table, column).Set(true),
+			wantFieldPath: docstore.FieldPath(column),
+			wantValue:     true,
+		},
+		{
+			name:          "Bool-Unset",
+			expr:          NewBool(table, column).Unset(),
+			wantFieldPath: docstore.FieldPath(column),
+			wantValue:     nil,
+		},
+		// ======================== time ======================================
+		{
+			name:          "Time-Set",
+			expr:          NewTime(table, column).Set(testTime),
+			wantFieldPath: docstore.FieldPath(column),
+			wantValue:     testTime,
+		},
+		{
+			name:          "Time-Unset",
+			expr:          NewTime(table, column).Unset(),
+			wantFieldPath: docstore.FieldPath(column),
+			wantValue:     nil,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			gotFieldPath, gotValue := tt.expr.BuildMod()
+
+			if tt.wantFieldPath != gotFieldPath {
+				t.Errorf("FieldPath: want %v, got %v", tt.wantFieldPath, gotFieldPath)
 			}
 			if !reflect.DeepEqual(tt.wantValue, gotValue) {
 				t.Errorf("Value: want %v, got %v", tt.wantValue, gotValue)

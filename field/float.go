@@ -40,6 +40,18 @@ func (field Float64) NotIn(values ...float64) Expr {
 	return expr{e: NotIn{Column: field.col, Values: field.toSlice(values)}}
 }
 
+var _ numericModifier[float64] = new(Float64)
+
+// Set set value
+func (field Float64) Set(value float64) Mod {
+	return mod{m: Set{Column: field.col, Value: value}}
+}
+
+// Inc increments the field by the provided float64 value
+func (field Float64) Inc(value float64) Mod {
+	return mod{m: newInc(field.col, value)}
+}
+
 // toSlice converts a slice of float64 to a slice of interface{}
 func (field Float64) toSlice(values []float64) []interface{} {
 	slice := make([]interface{}, len(values))
@@ -53,6 +65,7 @@ func (field Float64) toSlice(values []float64) []interface{} {
 type Float32 Float64
 
 var _ expression[float32] = new(Float32)
+var _ numericModifier[float32] = new(Float32)
 
 // Eq checks if the field is equal to the provided float32 value
 func (field Float32) Eq(value float32) Expr {
@@ -87,6 +100,16 @@ func (field Float32) In(values ...float32) Expr {
 // NotIn checks if the field is not in the provided float32 values
 func (field Float32) NotIn(values ...float32) Expr {
 	return expr{e: NotIn{Column: field.col, Values: field.toSlice(values)}}
+}
+
+// Set set value
+func (field Float32) Set(value float32) Mod {
+	return mod{m: Set{Column: field.col, Value: value}}
+}
+
+// Inc increments the field by the provided float32 value
+func (field Float32) Inc(value float32) Mod {
+	return mod{m: newInc(field.col, value)}
 }
 
 // toSlice converts a slice of float32 to a slice of interface{}

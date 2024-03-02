@@ -123,3 +123,60 @@ func Test_expr_FieldPath(t *testing.T) {
 		})
 	}
 }
+
+func Test_expr_BuildMod(t *testing.T) {
+	type fields struct {
+		col Column
+		e   Expression
+		m   Mod
+	}
+	tests := []struct {
+		name          string
+		fields        fields
+		wantFieldPath docstore.FieldPath
+		wantValue     interface{}
+	}{
+		{
+			name: "BuildMod with nil Mod",
+			fields: fields{
+				col: Column{
+					Name: "column",
+				},
+				e: nil,
+				m: nil,
+			},
+			wantFieldPath: docstore.FieldPath(""),
+			wantValue:     nil,
+		},
+		{
+			name: "BuildMod with non-nil Mod",
+			fields: fields{
+				col: Column{
+					Name: "column",
+				},
+				e: nil,
+				m: mod{
+					m: Set{Column: toColumn("table", "column"), Value: "value"},
+				},
+			},
+			wantFieldPath: docstore.FieldPath("column"),
+			wantValue:     "value",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			e := expr{
+				col: tt.fields.col,
+				e:   tt.fields.e,
+				m:   tt.fields.m,
+			}
+			gotFieldPath, gotValue := e.BuildMod()
+			if gotFieldPath != tt.wantFieldPath {
+				t.Errorf("expr.BuildMod() gotFieldPath = %v, want %v", gotFieldPath, tt.wantFieldPath)
+			}
+			if !reflect.DeepEqual(gotValue, tt.wantValue) {
+				t.Errorf("expr.BuildMod() gotValue = %v, want %v", gotValue, tt.wantValue)
+			}
+		})
+	}
+}
