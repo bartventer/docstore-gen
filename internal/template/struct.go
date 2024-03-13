@@ -181,6 +181,12 @@ const (
 		return {{.S}}
 	}
 
+	// Offset offset
+	func ({{.S}} *{{.QueryStructName}}QueryDo) Offset(n int) *{{.QueryStructName}}QueryDo {
+		{{.S}}.Query = {{.S}}.Query.Offset(n)
+		return {{.S}}
+	}
+
 	// OrderBy order by
 	func ({{.S}} *{{.QueryStructName}}QueryDo) OrderBy(orderBys ...field.OrderByExpression) *{{.QueryStructName}}QueryDo {
 		for _, orderBy := range orderBys {
