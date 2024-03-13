@@ -177,6 +177,12 @@ func (u *userQueryDo) Limit(n int) *userQueryDo {
 	return u
 }
 
+// Offset offset
+func (u *userQueryDo) Offset(n int) *userQueryDo {
+	u.Query = u.Query.Offset(n)
+	return u
+}
+
 // OrderBy order by
 func (u *userQueryDo) OrderBy(orderBys ...field.OrderByExpression) *userQueryDo {
 	for _, orderBy := range orderBys {
