@@ -33,9 +33,7 @@ jobs:
           go-version: ${{ matrix.go-version }}
         id: go
   
-      - name: Check out code into the Go module directory
-        uses: actions/checkout@v4
-  
+      - uses: actions/checkout@v4
       - name: Cache dependencies
         uses: actions/cache@v4
         with:
@@ -53,32 +51,34 @@ jobs:
       - name: Test and Coverage
         run: make cover
         
-      - uses: shogo82148/actions-goveralls@v1
+      - name: Coveralls
+        uses: shogo82148/actions-goveralls@v1
         with:
           path-to-profile: ./tmp/cover.out
   
-  license-check:
-    name: License Check
-    needs: [build]
+  license-scan:
+    name: License scan
     runs-on: ubuntu-latest
+    needs: [build]
     steps:
+      - uses: actions/checkout@v4
       - name: Install FOSSA
         run: |
           curl -H 'Cache-Control: no-cache' https://raw.githubusercontent.com/fossas/fossa-cli/master/install-latest.sh | bash
 
       - name: Run FOSSA analysis
-        run: fossa analyze
         env:
           FOSSA_API_KEY: ${{ secrets.FOSSA_API_KEY }}
+        run: fossa analyze
 
       - name: Check FOSSA status
-        run: fossa test
         env:
           FOSSA_API_KEY: ${{ secrets.FOSSA_API_KEY }}
+        run: fossa test
 
   semantic-release:
     name: Semantic Release
-    needs: [license-check]
+    needs: [license-scan]
     runs-on: ubuntu-latest
     permissions: 
       contents: write
