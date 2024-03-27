@@ -28,13 +28,12 @@ jobs:
     #       - 27017:27017
     
     steps:
+      - uses: actions/checkout@v4
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
           go-version: ${{ matrix.go-version }}
         id: go
-  
-      - uses: actions/checkout@v4
       - name: Cache dependencies
         uses: actions/cache@v4
         with:
@@ -56,21 +55,10 @@ jobs:
         uses: shogo82148/actions-goveralls@v1
         with:
           path-to-profile: ./tmp/cover.out
-          flag-name: OS-${{ matrix.os }} Go-${{ matrix.go-version }}
-          parallel: true
   
-  build-finish:
-    name: Build Finish
-    needs: [build]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: shogo82148/actions-goveralls@v1
-        with:
-          parallel-finished: true
-
   license-scan:
     name: License scan
-    needs: [build-finish]
+    needs: [build]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
