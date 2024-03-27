@@ -11,6 +11,7 @@ jobs:
   build:
     name: Build and Test
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
         go-version: [1.21.x,1.22.x]
@@ -55,11 +56,22 @@ jobs:
         uses: shogo82148/actions-goveralls@v1
         with:
           path-to-profile: ./tmp/cover.out
+          flag-name: OS-${{ matrix.os }} Go-${{ matrix.go-version }}
+          parallel: true
   
+  build-finish:
+    name: Build Finish
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: shogo82148/actions-goveralls@v1
+        with:
+          parallel-finished: true
+
   license-scan:
     name: License scan
+    needs: [build-finish]
     runs-on: ubuntu-latest
-    needs: [build]
     steps:
       - uses: actions/checkout@v4
       - name: Install FOSSA
