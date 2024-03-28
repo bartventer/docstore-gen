@@ -17,16 +17,6 @@ jobs:
         go-version: [1.21.x,1.22.x]
     
     runs-on: ${{ matrix.os }}
-    # env:
-    #   MONGO_SERVER_URL: mongodb://localhost:27017
-    #   MONGO_PORT: 27017
-      # If test are affected by mongo, then set matrix-os to [ubuntu-latest]
-    # services:
-    #   mongo:
-    #     image: mongo:7
-    #     ports:
-    #       - 27017:27017
-    
     steps:
       - uses: actions/checkout@v4
       - name: Set up Go
@@ -58,7 +48,7 @@ jobs:
   
   license-scan:
     name: License scan
-    if: github.event_name == 'push'
+    if: github.repository == 'bartventer/docstore-gen' && github.event_name == 'push'
     needs: [build]
     runs-on: ubuntu-latest
     steps:
