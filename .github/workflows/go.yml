@@ -58,6 +58,7 @@ jobs:
   
   license-scan:
     name: License scan
+    if: github.event_name == 'push'
     needs: [build]
     runs-on: ubuntu-latest
     steps:
@@ -66,12 +67,12 @@ jobs:
         run: |
           curl -H 'Cache-Control: no-cache' https://raw.githubusercontent.com/fossas/fossa-cli/master/install-latest.sh | bash
 
-      - name: Run FOSSA analysis
+      - name: Run FOSSA analyze
         env:
           FOSSA_API_KEY: ${{ secrets.FOSSA_API_KEY }}
         run: fossa analyze
 
-      - name: Check FOSSA status
+      - name: Run FOSSA test
         env:
           FOSSA_API_KEY: ${{ secrets.FOSSA_API_KEY }}
         run: fossa test
