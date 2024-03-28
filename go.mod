@@ -2,7 +2,7 @@ module github.com/bartventer/docstore-gen
 
 go 1.22.0
 
-require golang.org/x/tools v0.18.0
+require golang.org/x/tools v0.19.0
 
 require (
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
@@ -22,5 +22,5 @@ require (
 
 require (
 	gocloud.dev v0.37.0
-	golang.org/x/mod v0.15.0 // indirect
+	golang.org/x/mod v0.16.0 // indirect
 )
