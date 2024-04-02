@@ -7,23 +7,23 @@ assignees: ''
 
 ---
 
-**Title**
+#### Title
 Please use a title that follows [semantic release conventions](https://www.conventionalcommits.org/). Start with the type of the commit (fix, feat, etc.), followed by a colon, then a short summary of the issue. If the issue affects all packages, use "all". Example: `fix(fields): not generating documents correctly`.
 
-**Describe the bug**
+#### Describe the bug
 A clear and concise description of what the bug is.
 
-**To Reproduce**
+#### To Reproduce
 Steps to reproduce the behavior:
 
-**Expected behavior**
+## Expected behavior
 A clear and concise description of what you expected to happen.
 
-**Screenshots**
+### Screenshots
 If applicable, add screenshots to help explain your problem.
 
-**Version**
+### Version
 Which version(s) of the `docstore-gen` modules are you seeing the bug with?
 
-**Additional context**
+## Additional context
 Add any other context about the problem here.
