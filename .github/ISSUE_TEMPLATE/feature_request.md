@@ -7,7 +7,7 @@ assignees: ''
 ---
 
 > [!IMPORTANT]
-> Please use a title starting with the name of the affected package, or "all", followed by a colon, followed by a short summary of the feature. Example: `internal/fields: add. caching mechanism to generator`.
+> Please use a title starting with the name of the affected package, or "all", followed by a colon, followed by a short summary of the feature. Example: `internal/fields: add caching mechanism to generator`.
 
 ### Is your feature request related to a problem? Please describe.
 A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
