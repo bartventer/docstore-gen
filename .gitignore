@@ -4,8 +4,5 @@
 # Environment variables
 .env
 
-# Devcontainer
-.devcontainer
-
 # Temp directory generated during testing
 __temp__*

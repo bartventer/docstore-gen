@@ -1,0 +1,22 @@
+{
+    "name": "Docstoregen Devcontainer",
+    "build": {
+        "dockerfile": "Dockerfile",
+        "context": "."
+    },
+    "features": {
+        "ghcr.io/bartventer/arch-devcontainer-features/go": {
+            "golangciLintVersion": "none",
+            "installGoReleaser": true
+        },
+        "ghcr.io/bartventer/arch-devcontainer-features/docker-in-docker": {}
+    },
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "github.vscode-github-actions"
+            ]
+        }
+    },
+    "remoteUser": "vscode"
+}
