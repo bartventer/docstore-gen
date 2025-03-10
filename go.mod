@@ -22,6 +22,6 @@ require (
 )
 
 require (
-	gocloud.dev v0.39.0
+	gocloud.dev v0.40.0
 	golang.org/x/mod v0.18.0 // indirect
 )
